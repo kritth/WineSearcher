@@ -36,4 +36,4 @@ You need to enter correct credential into application.properties and run via mvn
 ## Note:
 
 - Properties/Configuration file omits the url and credential to the database as this folder is public.
-- Majority of getters of model are not tested since it does not contain any logic.
+- Majority of getters of model are not unit-tested since it does not contain any logic and are not in specification requirement.
