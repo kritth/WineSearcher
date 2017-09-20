@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Wine searcher</title>
+<meta charset="utf-8">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+	type="text/css">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta/css/bootstrap.css"
+	type="text/css">
+</head>
+<body ng-app="wineSearcher" ng-controller="WineController"
+	class="bg-dark">
+	<!-- Alert -->
+	<div class="py-4 fixed-top"
+		style="margin: 0 0 0 auto; padding: 0; width: 600px;">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<div id="div-error" class="alert alert-danger" role="alert"
+						style="display: none;">
+						<button type="button" class="close" aria-label="Close"
+							onclick="toggleAlert();">
+							<span aria-hidden="true">×</span>
+						</button>
+						<i class="fa fa-fw fa-exclamation-triangle"></i> <span><strong>Error:
+						</strong> {{error_message}} </span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="main-body"
+		class="panel panel-default container-fluid container bg-light"
+		style="display: none;">
+
+		<!-- Top row for Heading -->
+		<div class="row bg-secondary p-3">
+			<div class="col-md-12 panel-heading">
+				<h2>Wine Searcher application</h2>
+			</div>
+		</div>
+
+		<!-- For: Create a wine search function allowing you to input a wine product number, returning the name
+			and: Have a search function getting a wine number as input returning  a JSON representation of 5 fields of the ‘Products’ table -->
+		<form class="p-3">
+			<div class="row p-2">
+				<div class="col-md-3">
+					<label class="form-control">Search by ID</label>
+				</div>
+				<div class="col-md-7">
+					<input type="text" ng-model="searchId"
+						placeholder="Enter product ID" class="form-control" />
+				</div>
+				<div class="col-md-2 m-0">
+					<button class="btn btn-primary w-100" ng-click="_getById();">
+						<i class="fa fa-search" aria-hidden="true"
+							style="margin-right: 10px;"></i>Search
+					</button>
+				</div>
+			</div>
+		</form>
+		<div id="result-1-table" class="row p-2">
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<th>Result with 1 property</th>
+						<th>Result with 5 properties</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr style="cursor: pointer;">
+						<td>{{obj_return_small}}</td>
+						<td>{{obj_return_large}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<!-- For: Create a wine list function returning the name and price of the first 50 wines in the table -->
+		<form class="p-3">
+			<div class="row p-2">
+				<div class="col-md-3">
+					<label class="form-control">Search first N rows</label>
+				</div>
+				<div class="col-md-7">
+					<input type="text" ng-model="searchAmount"
+						ng-init="searchAmount='50'" placeholder="Enter amount to display"
+						class="form-control" />
+				</div>
+
+				<div class="col-md-2 m-0">
+					<button class="btn btn-primary w-100" ng-click="_getByAmount();">
+						<i class="fa fa-search" aria-hidden="true"
+							style="margin-right: 10px;"></i>Search
+					</button>
+				</div>
+			</div>
+		</form>
+		<div class="row p-2">
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Price</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr style="cursor: pointer;" ng-repeat="row in firstNData">
+						<td>{{ row.name }}</td>
+						<td>{{ row.price_sell }}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<!-- For: A paged wine list function accepting a page number as a parameter returning the 100 wine names. So if I pass ‘1’ as a parameter
+	, you should return me the names of wines 1-100. If I pass ‘3’ as a parameter, you return wines 300-400. -->
+		<form class="p-3">
+			<div class="row p-2">
+				<div class="col-md-3">
+					<label class="form-control">Search page N</label>
+				</div>
+				<div class="col-md-7">
+					<input type="text" ng-model="searchPage" ng-init="searchPage='1'"
+						placeholder="Enter page to display" class="form-control" />
+				</div>
+
+				<div class="col-md-2 m-0">
+					<button class="btn btn-primary w-100" ng-click="_getByPage();">
+						<i class="fa fa-search" aria-hidden="true"
+							style="margin-right: 10px;"></i>Search
+					</button>
+				</div>
+			</div>
+		</form>
+		<div class="row p-2">
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<th>Name</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr style="cursor: pointer;" ng-repeat="row in pageData">
+						<td>{{ row.name }}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<script src="https://code.jquery.com/jquery-3.2.1.min.js"
+		integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+		crossorigin="anonymous"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.min.js"
+		integrity="sha256-zBy1l2WBAh2vPF8rnjFMUXujsfkKjya0Jy5j6yKj0+Q="
+		crossorigin="anonymous"></script>
+	<script
+		src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+		integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+		crossorigin="anonymous"></script>
+	<script src="js/WineController.js"></script>
+</body>
+</html>
