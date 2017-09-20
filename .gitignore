@@ -17,9 +17,9 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-# Batch file
-*.batch
-*.properties
+# My file
+target/**
+start.bat
 
 # =========================
 # Operating System Files
