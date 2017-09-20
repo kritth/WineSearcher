@@ -31,7 +31,7 @@ Deployment
 
 ## To run this application:
 
-You can either compile it or run it via provided batch file in root folder.
+You need to enter correct credential into application.properties and run via mvn spring-boot:run command.
 
 ## Note:
 
